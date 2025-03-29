@@ -2,8 +2,10 @@
     
 
 # Features
+-Header
 -login or signup screeen
-    -sign in/sign up form
+    -sign in
+    -sign up form
         -redirect to browse page
 -Browse(only comes after authentication)
     -Header

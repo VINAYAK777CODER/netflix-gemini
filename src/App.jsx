@@ -1,8 +1,9 @@
 import React from 'react'
+import Body from './components/Body'
 
 const App = () => {
   return (
-    <div className='text-3xl text-amber-600 font-bold'>hello we are buliding netflix gpt</div>
+    <Body/>
   )
 }
 
