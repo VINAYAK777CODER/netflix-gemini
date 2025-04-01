@@ -1,62 +1,168 @@
-import React, { useState } from 'react';
-import Header from './Header';
+import React, { useRef, useState } from "react";
+import Header from "./Header";
+import { checkValidData } from "../utils/validation";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
-  const [isSignIn,setSignIn]=useState(true);
-  const toggleForm=()=>{
-    setSignIn(!isSignIn);
+  const dispatch=useDispatch();
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState(null);
+  const email = useRef(null); //email.current.value
+  const password = useRef(null); //password.current.value
+  const name = useRef(null);
+  const [isSignIn, setSignIn] = useState(true);
+  const handleonclick = () => {
+    const message = checkValidData(email.current.value, password.current.value);
+    // console.log(message);
+    setErrorMessage(message);
+    if (message) return;
+    //sign up logic
+    if (!isSignIn) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up logic pasted from firebase
 
-  }
+          const user = userCredential.user;
+
+          updateProfile(user, {
+
+            displayName: name.current.value,
+            photoURL: "https://avatars.githubusercontent.com/u/142195863?v=4",
+
+          })
+            .then(() => {
+              // Profile updated!
+               const {uid,email,displayName,photoURL }= auth.currentUser;
+                        dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL})); 
+              navigate("/browse");
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+              setErrorMessage(error.message);
+            });
+
+          console.log(user); //object
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // ...
+          console.log(user);
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
+
+    // console.log(email.current.value);
+    // console.log(password.current.value);
+  };
+  const toggleForm = () => {
+    setSignIn(!isSignIn);
+  };
   return (
-    <div className='relative w-full h-screen bg-black'>
+    <div className="relative w-full h-screen bg-black">
       <Header />
-      
+
       {/* Background Image */}
-      <div className='absolute inset-0'>
+      <div className="absolute inset-0">
         <img
-          src='https://assets.nflxext.com/ffe/siteui/vlv3/fbf440b2-24a0-49f5-b2ba-a5cbe8ea8736/web_tall_panel/IN-en-20250324-TRIFECTA-perspective_69cb00d3-7b5e-45e8-b378-7757f9c8f60b_large.jpg'
-          alt='Netflix Background'
-          className='w-full h-full object-cover opacity-50'
+          src="https://assets.nflxext.com/ffe/siteui/vlv3/fbf440b2-24a0-49f5-b2ba-a5cbe8ea8736/web/IN-en-20250324-TRIFECTA-perspective_d7c906ec-0531-47de-8ece-470d5061c88a_small.jpg"
+          alt="Netflix Background"
+          className="w-full h-full object-cover opacity-50"
         />
       </div>
-      
+
       {/* Login Form */}
-      <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 p-8 rounded-xl shadow-lg w-96 text-white'>
-        <h2 className='text-3xl font-bold text-center mb-6'>{isSignIn?"Sign In":"Sign up"}</h2>
-        <form className='flex flex-col gap-4'>
-          {!isSignIn?<input
-            type='text'
-            placeholder='Enter Name'
-            className='p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600'
-          />:null}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 p-8 rounded-xl shadow-lg w-96 text-white">
+        <h2 className="text-3xl font-bold text-center mb-6">
+          {isSignIn ? "Sign In" : "Sign up"}
+        </h2>
+        <form
+          onSubmit={(e) => e.preventDefault()}
+          className="flex flex-col gap-4"
+        >
+          {!isSignIn ? (
+            <input
+              type="text"
+              ref={name}
+              placeholder="Enter Name"
+              className="p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600"
+            />
+          ) : null}
           <input
-            type='email'
-            placeholder='Email Address'
-            className='p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600'
+            type="email"
+            ref={email}
+            placeholder="Email Address"
+            className="p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600"
           />
           <input
-            type='password'
-            placeholder='Password'
-            className='p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600'
+            type="password"
+            ref={password}
+            placeholder="Password"
+            className="p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600"
           />
-          <button className='p-3 bg-red-600 rounded text-white font-semibold hover:bg-red-700 transition'>
-          {isSignIn?"Sign In":"Sign up"}
+          <p className="text-red-600 font-bold text-lg">{errorMessage}</p>
+          <button
+            onClick={handleonclick}
+            className="p-3 bg-red-600 rounded text-white font-semibold hover:bg-red-700 transition"
+          >
+            {isSignIn ? "Sign In" : "Sign up"}
           </button>
         </form>
-        
+
         {/* Additional Options */}
-        <div className='flex justify-between text-sm text-gray-400 mt-4'>
-          <label className='flex items-center space-x-2'>
-            <input type='checkbox' className='accent-red-600' />
+        <div className="flex justify-between text-sm text-gray-400 mt-4">
+          <label className="flex items-center space-x-2">
+            <input type="checkbox" className="accent-red-600" />
             <span>Remember Me</span>
           </label>
-          <a href='#' className='hover:underline'>Need Help?</a>
+          <a href="#" className="hover:underline">
+            Need Help?
+          </a>
         </div>
-        
+
         {/* Sign Up Link */}
-        <div className='mt-6 text-center'>
-          <span className='text-gray-400'>{isSignIn?"New To Netflix ?":" click For Sign In"} </span>
-          <a href='#' onClick={toggleForm} className='text-white font-semibold hover:underline'>{isSignIn?"Sign Up":"Sign In"}</a>
+        <div className="mt-6 text-center">
+          <span className="text-gray-400">
+            {isSignIn ? "New To Netflix ?" : " click For Sign In"}{" "}
+          </span>
+          <a
+            href="#"
+            onClick={toggleForm}
+            className="text-white font-semibold hover:underline"
+          >
+            {isSignIn ? "Sign Up" : "Sign In"}
+          </a>
         </div>
       </div>
     </div>
