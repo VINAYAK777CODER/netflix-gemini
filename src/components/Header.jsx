@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { auth } from "../utils/firebase";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { LOGO_NETFLIX } from "../utils/constants";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -27,20 +28,52 @@ const Header = () => {
     signOut(auth)
       .then(() => {
         dispatch(addUser(null)); // CLEAR THE USER FROM REDUX
-        navigate("/");
+        // navigate("/");
       })
       .catch((error) => {
         console.log(error);
         navigate("/error");
       });
   };
+  useEffect(() => {
+     const unsubscribe =onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email, displayName, photoURL } = user;
+        dispatch(addUser({ uid, email, displayName, photoURL }));
+        navigate("/browse");
+      } else {
+        dispatch(addUser(null)); // CLEAR USER ON SIGN OUT
+        navigate("/");
+      }
+    });
+    // Unsubscribe when component will unmounts
+    return ()=>unsubscribe();
+    /*The unsubscribe function comes from the onAuthStateChanged method of Firebase Authentication.
+     This method listens for authentication state changes 
+    (like login/logout) and returns a function that removes the listener when called.*/
+  }, []);
+  /*
+  --------------------------------------------------------------
+  Why Does This Prevent Unauthorized Access?
+Scenario 1: User is Not Logged In
+
+If someone directly types http://localhost:5173/browse in the browser without 
+logging in, the onAuthStateChanged
+ function will detect that the user is null and redirect them to /.
+
+This ensures that only logged-in users can access /browse.
+
+
+
+ -----------------------------------------------------------------------------------------
+   */
 
   return (
     <div className="z-40 w-full px-8 py-3 absolute bg-gradient-to-b from-black flex items-center justify-between">
       {/* Netflix Logo */}
       <img
         className="w-36"
-        src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production/consent/87b6a5c0-0104-4e96-a291-092c11350111/01938dc4-59b3-7bbc-b635-c4131030e85f/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png"
+        src={LOGO_NETFLIX}
         alt="Netflix Logo"
       />
 

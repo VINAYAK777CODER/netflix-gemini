@@ -7,13 +7,12 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { LOGIN_BACKGROUND, USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
   const dispatch=useDispatch();
-  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState(null);
   const email = useRef(null); //email.current.value
   const password = useRef(null); //password.current.value
@@ -39,14 +38,14 @@ const Login = () => {
           updateProfile(user, {
 
             displayName: name.current.value,
-            photoURL: "https://avatars.githubusercontent.com/u/142195863?v=4",
+            photoURL: USER_AVATAR, // DONT USE THIS AS ITS not JSX -->{USER_AVATAR}
 
           })
             .then(() => {
               // Profile updated!
                const {uid,email,displayName,photoURL }= auth.currentUser;
                         dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL})); 
-              navigate("/browse");
+              
             })
             .catch((error) => {
               // An error occurred
@@ -54,8 +53,8 @@ const Login = () => {
               setErrorMessage(error.message);
             });
 
-          console.log(user); //object
-          navigate("/browse");
+          // console.log(user); //object
+          
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -73,8 +72,7 @@ const Login = () => {
           // Signed in
           const user = userCredential.user;
           // ...
-          console.log(user);
-          navigate("/browse");
+          
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -96,7 +94,7 @@ const Login = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/fbf440b2-24a0-49f5-b2ba-a5cbe8ea8736/web/IN-en-20250324-TRIFECTA-perspective_d7c906ec-0531-47de-8ece-470d5061c88a_small.jpg"
+          src={LOGIN_BACKGROUND}
           alt="Netflix Background"
           className="w-full h-full object-cover opacity-50"
         />
