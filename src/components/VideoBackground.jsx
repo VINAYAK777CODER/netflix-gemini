@@ -1,65 +1,20 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { API_OPTIONS } from "../utils/constants";
+import React from "react";
+import { useSelector } from "react-redux";
+import useMovieTrailer from "../hooks/useMovieTrailer";
 
 const VideoBackground = ({ movieId }) => {
-  const [trailerKey, setTrailerKey] = useState(null); // Stores the YouTube trailer key
-
-  // Fetch trailer from TMDB API
-  const getMovieTrailer = async () => {
-    try {
-      console.log("Fetching trailer for movie ID:", movieId);
-
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`,
-        API_OPTIONS
-      );
-
-      const data = response.data;
-
-      // Filter only YouTube trailers
-      const filteredVideos = data?.results?.filter(
-        (video) => video.type === "Trailer" && video.site === "YouTube"
-      );
-
-      // Pick the first matching trailer
-      const trailer = filteredVideos?.length ? filteredVideos[0] : data.results[0];
-
-      if (trailer) {
-        setTrailerKey(trailer.key); // Set trailer key in state
-        console.log("Trailer found:", trailer);
-      } else {
-        console.warn("No trailer found for this movie.");
-      }
-    } catch (error) {
-      console.error("Problem in fetching the movie trailer");
-
-      if (error.response) {
-        console.error("Error status:", error.response.status);
-        console.error("Error message:", error.response.data.status_message);
-      } else {
-        console.error("Error:", error.message);
-      }
-    }
-  };
-
-  // Fetch trailer when movieId changes
-  useEffect(() => {
-    if (movieId) {
-      getMovieTrailer();
-    } else {
-      console.warn("No movie ID provided.");
-    }
-  }, [movieId]);
+  // const [trailerKey, setTrailerKey] = useState(null); // Stores the YouTube trailer key
+  const trailervideo = useSelector((store) => store.movies?.trailervideo);
+  useMovieTrailer(movieId);
 
   return (
-    <div className="video-background">
-      {trailerKey ? (
-        // Embed YouTube trailer using iframe
+    <div className="video-background w-screen">
+      {!trailervideo ? (
+        <p>Loading trailer...</p>
+      ) : trailervideo?.key ? (
         <iframe
-          width="100%"
-          height="100%"
-          src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailerKey}`}
+          className="w-screen aspect-video"
+          src={`https://www.youtube.com/embed/${trailervideo.key}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailervideo.key}`}
           title="YouTube trailer"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -67,7 +22,7 @@ const VideoBackground = ({ movieId }) => {
           referrerPolicy="strict-origin-when-cross-origin"
         ></iframe>
       ) : (
-        <p>Loading trailer...</p> // Placeholder while trailer loads
+        <p>No trailer found</p>
       )}
     </div>
   );

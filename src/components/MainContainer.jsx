@@ -7,7 +7,7 @@ const MainContainer = () => {
   const movies = useSelector((store) => store.movies?.nowPlayingMovies);
   if (movies === null) return; // this is also known as earl y return
   const mainMovie = movies[0];
-  console.log(mainMovie);
+  // console.log(mainMovie);
   const {original_title,overview,id}=mainMovie
   return (
     <div>
