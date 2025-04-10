@@ -5,6 +5,10 @@ const movieSlice = createSlice({
   initialState: {
     nowPlayingMovies: null,
     trailervideo:null,
+    popularMovies:null,
+    topRatedMovies:null,
+    upcomingMovies:null
+    
   },
   reducers: {
     addPlayingMovies: (state, action) => {
@@ -12,10 +16,19 @@ const movieSlice = createSlice({
     },
     addTrailerVideo:(state,action)=>{
       state.trailervideo=action.payload;
+    },
+    addPopularMovies:(state,action)=>{
+      state.popularMovies=action.payload;
+    },
+    addTopRatedMovies:(state,action)=>{
+      state.topRatedMovies=action.payload;
+    },
+    addUpcomingMovies:(state,action)=>{
+      state.upcomingMovies=action.payload;
     }
   },
 });
-export const {addPlayingMovies,addTrailerVideo} =movieSlice.actions;
+export const {addPlayingMovies,addTrailerVideo,addPopularMovies,addTopRatedMovies,addUpcomingMovies} =movieSlice.actions;
 export default movieSlice.reducer;
 
 // now i will add my moviesSlice to my appStore

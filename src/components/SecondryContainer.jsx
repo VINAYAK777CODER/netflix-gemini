@@ -5,12 +5,12 @@ import MovieList from './MovieList';
 const SecondryContainer = () => {
   const movies=useSelector(store=>store.movies);
   return (
-    <div className='bg-black'>
+    <div className='bg-black w-screen min-h-screen '>
       <div className='-mt-45  relative z-20'>
       <MovieList title={"Now Playing"} movies={movies.nowPlayingMovies} />
-      <MovieList title={"popular"} movies={movies.nowPlayingMovies} />
-      <MovieList title={"Trending"} movies={movies.nowPlayingMovies} />
-      <MovieList title={"horror"} movies={movies.nowPlayingMovies} />
+      <MovieList title={"Popular"} movies={movies.popularMovies} />
+      <MovieList title={"Top Rated"} movies={movies.topRatedMovies} />
+      <MovieList title={"Upcoming"} movies={movies.upcomingMovies} />
       </div>
 
 

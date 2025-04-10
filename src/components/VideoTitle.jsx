@@ -3,7 +3,7 @@ import React from 'react';
 const VideoTitle = ({ title, overview }) => {
   return (
     <div className="pt-[15%] px-10 absolute text-white w-screen aspect-video bg-gradient-to-r from-black/80 via-black/40 to-transparent animate-fade-in z-20">
-      <h1 className="text-3xl md:text-5xl font-bold tracking-wide bg-gradient-to-br from-white via-pink-300 to-red-500 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(255,192,203,0.3)] animate-pulse">
+      <h1 className="text-3xl md:text-5xl font-bold tracking-wide bg-gradient-to-br from-pink-300 via-red-500 to-white bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(255,192,203,0.3)] animate-pulse">
         {title}
       </h1>
       
