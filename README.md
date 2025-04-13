@@ -1,4 +1,5 @@
 # netflix-gpt
+
 - react app
 - configured Tailwindcss
 - Header
@@ -7,12 +8,12 @@
 - signup form
 - Form Validation
 - useRef Hook
-- Firebase Setup 
+- Firebase Setup
 - Deploying Our App to Production
 - create signup user account
 - implement signup in user Api
-- ceated  ReduxStore with userslice
-- we wil get from firebase ->manageusers->get the currently signed in user(its kinda eventlistener automatically gets called when user signup/signin/singout)       
+- ceated ReduxStore with userslice
+- we wil get from firebase ->manageusers->get the currently signed in user(its kinda eventlistener automatically gets called when user signup/signin/singout)
 - implemented signout
 - update Profile
 - BugFix: Sign up user displayName and profile picture update
@@ -30,24 +31,30 @@
 - Embedded the Yotube video and make it autoplay and mute
 - Tailwind Classes to make Main Container look awesome
 - Build the secondry component
-
-
-    
+- Build Movie List
+- build Movie Card
+- TMDB Image CDN URL
+- Made the Browsre page amazing with Tailwind CSS
+- usePopularMovies Custom hook
+- gpt search feature
+- gpt search page
+- gpt search bar
+- Added multi-language feature in our app-BIG FEATURE
 
 # Features
+
 -Header
 -login or signup screeen
-    -sign in
-    -sign up form
-        -redirect to browse page
+-sign in
+-sign up form
+-redirect to browse page
 -Browse(only comes after authentication)
-    -Header
-    -Main movie
-        -Trialer in background
-        -Title and discription
-        -moviesuggestion 
-            -movie list*n 
+-Header
+-Main movie
+-Trialer in background
+-Title and discription
+-moviesuggestion
+-movie list\*n
 -NETFLIX GPT
-    -search bar
-    -movie suggestions
-
+-search bar
+-movie suggestions

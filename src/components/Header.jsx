@@ -4,12 +4,15 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { LOGO_NETFLIX } from "../utils/constants";
+import { LOGO_NETFLIX, SUPPORTED_LANGUAGES } from "../utils/constants";
+import { toggleGptSearchView } from "../utils/gptSlice";
+import { changeLanguage } from "../utils/configSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
+  const showGptsearch = useSelector((store) => store.gpt.showGptSearch);
   //---------- creating bug-----------------//
   /*const handleSignOut=()=>{
     signOut(auth).then(() => {
@@ -34,6 +37,13 @@ const Header = () => {
         console.log(error);
         navigate("/error");
       });
+  };
+  const handleGptSearchClick=()=>{
+    dispatch(toggleGptSearchView())
+  }
+  const handleLanguageChange = (e) => {
+    // console.log(e.target.value)
+    dispatch(changeLanguage(e.target.value));
   };
   useEffect(() => {
      const unsubscribe =onAuthStateChanged(auth, (user) => {
@@ -80,6 +90,21 @@ This ensures that only logged-in users can access /browse.
       {/* User Icon & Sign Out Button */}
       {user && user.photoURL && (
         <div className="flex items-center">
+           {showGptsearch && (
+            <select
+              className="p-2 m-2 bg-gray-900 text-white"
+              onChange={handleLanguageChange}
+            >
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <option key={lang.identifier} value={lang.identifier}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+          )}
+          <button 
+          onClick={handleGptSearchClick}
+          className=" bg-emerald-500 mr-3 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300">{!showGptsearch?"GPTsearch":"HomePage"}</button>
           <img
             src={user.photoURL}
             alt="User Icon"
