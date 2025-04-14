@@ -18,7 +18,7 @@ const useTopRatedMovies = () => {
         dispatch(addTopRatedMovies(data?.results))
         // console.log(data?.results);
       } catch (error) {
-        console.error("Failed to fetch now playing movies:", error);
+        console.error("Failed to fetch Top Rated movies:", error);
       }
     };
   

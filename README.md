@@ -40,6 +40,8 @@
 - gpt search page
 - gpt search bar
 - Added multi-language feature in our app-BIG FEATURE
+- Made the GPT SEARCH feature with the help of gemini api
+
 
 # Features
 

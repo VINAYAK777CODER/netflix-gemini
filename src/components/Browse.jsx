@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Header from "./Header";
 
@@ -9,10 +9,19 @@ import usePopularMovies from "../hooks/usePopularMovies";
 import useTopRatedMovies from "../hooks/usetopRatedMovies";
 import useUpcomingMovies from "../hooks/useUpcomingMovies,jsx";
 import GptSearch from "./GptSearch";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { clearGptResults } from "../utils/gptSlice";
 
 const Browse = () => {
+  const dispatch=useDispatch();
   const showGptsearch=useSelector(store=>store.gpt.showGptSearch)
+
+  useEffect(() => {
+    if (!showGptsearch) {
+      dispatch(clearGptResults()); // ✅ Clear GPT results when GPT view is turned off
+    }
+  }, [showGptsearch, dispatch]);
+
 
 useNowPlayingMovies(); 
 usePopularMovies();

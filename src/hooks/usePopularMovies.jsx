@@ -18,7 +18,7 @@ const usePopularMovies = () => {
         dispatch(addPopularMovies(data?.results))
         // console.log(data?.results);
       } catch (error) {
-        console.error("Failed to fetch now playing movies:", error);
+        console.error("Failed to fetch Popular movies:", error);
       }
     };
   
