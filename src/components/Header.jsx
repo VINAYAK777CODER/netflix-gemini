@@ -13,40 +13,28 @@ const Header = () => {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
   const showGptsearch = useSelector((store) => store.gpt.showGptSearch);
-  //---------- creating bug-----------------//
-  /*const handleSignOut=()=>{
-    signOut(auth).then(() => {
-      // Sign-out successful.
-       const {uid,email,displayName,photoURL }= user;
-      dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL}));
-      navigate("/")
-    }).catch((error) => {
-      // An error happened.
-      console.log(error)
-      navigate("/error")
-    });
-  }*/
-  //---------------solving---------------------//
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
         dispatch(addUser(null)); // CLEAR THE USER FROM REDUX
-        // navigate("/");
       })
       .catch((error) => {
         console.log(error);
         navigate("/error");
       });
   };
-  const handleGptSearchClick=()=>{
-    dispatch(toggleGptSearchView())
-  }
+
+  const handleGptSearchClick = () => {
+    dispatch(toggleGptSearchView());
+  };
+
   const handleLanguageChange = (e) => {
-    // console.log(e.target.value)
     dispatch(changeLanguage(e.target.value));
   };
+
   useEffect(() => {
-     const unsubscribe =onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email, displayName, photoURL } = user;
         dispatch(addUser({ uid, email, displayName, photoURL }));
@@ -56,43 +44,25 @@ const Header = () => {
         navigate("/");
       }
     });
-    // Unsubscribe when component will unmounts
-    return ()=>unsubscribe();
-    /*The unsubscribe function comes from the onAuthStateChanged method of Firebase Authentication.
-     This method listens for authentication state changes 
-    (like login/logout) and returns a function that removes the listener when called.*/
+
+    return () => unsubscribe();
   }, []);
-  /*
-  --------------------------------------------------------------
-  Why Does This Prevent Unauthorized Access?
-Scenario 1: User is Not Logged In
-
-If someone directly types http://localhost:5173/browse in the browser without 
-logging in, the onAuthStateChanged
- function will detect that the user is null and redirect them to /.
-
-This ensures that only logged-in users can access /browse.
-
-
-
- -----------------------------------------------------------------------------------------
-   */
 
   return (
-    <div className="z-40 w-full px-8 py-3 absolute bg-gradient-to-b from-black flex items-center justify-between">
+    <div className="z-40 w-full px-4 sm:px-8 py-3 absolute bg-gradient-to-b from-black flex items-center justify-between flex-wrap">
       {/* Netflix Logo */}
       <img
-        className="w-36"
+        className="w-24 sm:w-36 md:w-44 lg:w-52"
         src={LOGO_NETFLIX}
         alt="Netflix Logo"
       />
 
       {/* User Icon & Sign Out Button */}
       {user && user.photoURL && (
-        <div className="flex items-center">
-           {showGptsearch && (
+        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-8">
+          {showGptsearch && (
             <select
-              className="p-2 m-2 bg-gray-900 text-white"
+              className="p-2 m-2 bg-gray-900 text-white rounded-md"
               onChange={handleLanguageChange}
             >
               {SUPPORTED_LANGUAGES.map((lang) => (
@@ -102,17 +72,26 @@ This ensures that only logged-in users can access /browse.
               ))}
             </select>
           )}
-          <button 
-          onClick={handleGptSearchClick}
-          className=" bg-emerald-500 mr-3 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300">{!showGptsearch?"GPTsearch":"HomePage"}</button>
+
+          {/* GPT Search Button */}
+          <button
+            onClick={handleGptSearchClick}
+            className="text-emerald-500 border border-emerald-500 hover:bg-emerald-600 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 rounded-md font-semibold hover:scale-110 transition duration-300 sm:px-2 sm:py-1"
+          >
+            {!showGptsearch ? "GPTsearch" : "HomePage"}
+          </button>
+
+          {/* User Icon */}
           <img
             src={user.photoURL}
             alt="User Icon"
-            className="h-10 w-10 rounded-full object-cover mr-4"
+            className="h-10 w-10 rounded-full object-cover"
           />
+
+          {/* Sign Out Button */}
           <button
             onClick={handleSignOut}
-            className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300"
+            className="text-red-600 border border-red-600 hover:bg-red-700 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 rounded-md font-semibold hover:scale-110 transition duration-300 sm:px-2 sm:py-1"
           >
             Sign Out
           </button>

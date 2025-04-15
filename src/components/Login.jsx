@@ -12,18 +12,18 @@ import { addUser } from "../utils/userSlice";
 import { LOGIN_BACKGROUND, USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const [errorMessage, setErrorMessage] = useState(null);
-  const email = useRef(null); //email.current.value
-  const password = useRef(null); //password.current.value
+  const email = useRef(null);
+  const password = useRef(null);
   const name = useRef(null);
   const [isSignIn, setSignIn] = useState(true);
+
   const handleonclick = () => {
     const message = checkValidData(email.current.value, password.current.value);
-    // console.log(message);
     setErrorMessage(message);
     if (message) return;
-    //sign up logic
+
     if (!isSignIn) {
       createUserWithEmailAndPassword(
         auth,
@@ -31,35 +31,22 @@ const Login = () => {
         password.current.value
       )
         .then((userCredential) => {
-          // Signed up logic pasted from firebase
-
           const user = userCredential.user;
-
           updateProfile(user, {
-
             displayName: name.current.value,
-            photoURL: USER_AVATAR, // DONT USE THIS AS ITS not JSX -->{USER_AVATAR}
-
+            photoURL: USER_AVATAR,
           })
             .then(() => {
-              // Profile updated!
-               const {uid,email,displayName,photoURL }= auth.currentUser;
-                        dispatch(addUser({uid:uid,email:email,displayName:displayName,photoURL:photoURL})); 
-              
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(addUser({ uid, email, displayName, photoURL }));
             })
             .catch((error) => {
-              // An error occurred
-              // ...
               setErrorMessage(error.message);
             });
-
-          // console.log(user); //object
-          
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-
           setErrorMessage(errorCode + "-" + errorMessage);
         });
     } else {
@@ -68,25 +55,19 @@ const Login = () => {
         email.current.value,
         password.current.value
       )
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          // ...
-          
-        })
+        .then((userCredential) => {})
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessage(errorCode + "-" + errorMessage);
         });
     }
-
-    // console.log(email.current.value);
-    // console.log(password.current.value);
   };
+
   const toggleForm = () => {
     setSignIn(!isSignIn);
   };
+
   return (
     <div className="relative w-full h-screen bg-black">
       <Header />
@@ -101,22 +82,22 @@ const Login = () => {
       </div>
 
       {/* Login Form */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 p-8 rounded-xl shadow-lg w-96 text-white">
-        <h2 className="text-3xl font-bold text-center mb-6">
-          {isSignIn ? "Sign In" : "Sign up"}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 p-8 rounded-xl shadow-lg w-full sm:w-96 md:w-96 lg:w-96 xl:w-96 text-white">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6">
+          {isSignIn ? "Sign In" : "Sign Up"}
         </h2>
         <form
           onSubmit={(e) => e.preventDefault()}
           className="flex flex-col gap-4"
         >
-          {!isSignIn ? (
+          {!isSignIn && (
             <input
               type="text"
               ref={name}
               placeholder="Enter Name"
               className="p-3 rounded bg-gray-800 text-white outline-none border border-gray-600 focus:border-red-600"
             />
-          ) : null}
+          )}
           <input
             type="email"
             ref={email}
@@ -134,7 +115,7 @@ const Login = () => {
             onClick={handleonclick}
             className="p-3 bg-red-600 rounded text-white font-semibold hover:bg-red-700 transition"
           >
-            {isSignIn ? "Sign In" : "Sign up"}
+            {isSignIn ? "Sign In" : "Sign Up"}
           </button>
         </form>
 
@@ -152,7 +133,7 @@ const Login = () => {
         {/* Sign Up Link */}
         <div className="mt-6 text-center">
           <span className="text-gray-400">
-            {isSignIn ? "New To Netflix ?" : " click For Sign In"}{" "}
+            {isSignIn ? "New To Netflix ?" : "Click For Sign In"}{" "}
           </span>
           <a
             href="#"

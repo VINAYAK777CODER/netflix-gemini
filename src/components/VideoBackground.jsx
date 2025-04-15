@@ -3,14 +3,13 @@ import { useSelector } from "react-redux";
 import useMovieTrailer from "../hooks/useMovieTrailer";
 
 const VideoBackground = ({ movieId }) => {
-  // const [trailerKey, setTrailerKey] = useState(null); // Stores the YouTube trailer key
   const trailervideo = useSelector((store) => store.movies?.trailervideo);
   useMovieTrailer(movieId);
 
   return (
     <div className="video-background w-screen">
       {!trailervideo ? (
-        <p>Loading trailer...</p>
+        <p className="text-white text-center pt-4">Loading trailer...</p>
       ) : trailervideo?.key ? (
         <iframe
           className="w-screen aspect-video"
@@ -22,7 +21,7 @@ const VideoBackground = ({ movieId }) => {
           referrerPolicy="strict-origin-when-cross-origin"
         ></iframe>
       ) : (
-        <p>No trailer found</p>
+        <p className="text-white text-center pt-4">No trailer found</p>
       )}
     </div>
   );
