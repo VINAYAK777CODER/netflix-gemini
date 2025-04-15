@@ -7,7 +7,7 @@ const movieSlice = createSlice({
     trailervideo:null,
     popularMovies:null,
     topRatedMovies:null,
-    upcomingMovies:null
+    upcomingMovies:null,
     
   },
   reducers: {

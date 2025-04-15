@@ -10,7 +10,7 @@ export const API_OPTIONS = {
   headers: {
     accept: "application/json",
     Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNGM5Nzc3ZDVhMzg4MjU4NjAxYjRjYWVmMzk0OTNjZSIsIm5iZiI6MTc0Mzg0MTcxOS4yMjQsInN1YiI6IjY3ZjBlOWI3ZWRlOGQ4MmYzYmFkNTkwMyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.IzeG11KRCogq-AA_r6lojulAVutR8TlWnCLF8TTtxDU",
+      "Bearer "+ import.meta.env.VITE_TMDB_API_KEY,
   },
 };
 export const  IMG_CDN_URL="https://image.tmdb.org/t/p/w500";
