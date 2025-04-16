@@ -31,9 +31,10 @@ const GptSearchbar = () => {
 
     setLoading(true);
 
-    const gptPrompt =  "Act as a Movie Recommendation system and suggest some top rated with imdb > 6 movies for the query : " +
-    prompt +
-    ". only give me names of 5 movies, comma seperated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";;
+    const gptPrompt =
+      "Act as a Movie Recommendation system and suggest some top rated with imdb > 6 movies for the query : " +
+      prompt +
+      ". only give me names of 5 movies, comma separated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";
 
     try {
       const results = await generateText(gptPrompt);
@@ -54,20 +55,20 @@ const GptSearchbar = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center px-4">
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="flex items-center mt-[10%] p-1 bg-lime-950 rounded-xl shadow-lg gap-1"
+        className="flex items-center mt-10 p-1 bg-lime-950 rounded-xl shadow-lg gap-1 w-full max-w-md sm:max-w-xl"
       >
         <input
           ref={searchText}
           type="text"
-          className="py-3 px-3 bg-white text-black rounded-l-md focus:outline-none w-[300px]"
+          className="py-2 px-3 bg-white text-black rounded-l-md focus:outline-none flex-grow text-sm sm:text-base"
           placeholder={lang[configLanguage]?.gptSearchPlaceholder}
         />
         <button
           onClick={handleGptSearchClick}
-          className="px-6 py-3 bg-red-600 text-white font-semibold rounded-r-md hover:bg-blue-700 transition duration-300"
+          className="px-4 sm:px-6 py-2 sm:py-3 bg-red-600 text-white font-semibold rounded-r-md hover:bg-blue-700 transition duration-300 text-sm sm:text-base"
           disabled={loading}
         >
           {loading ? "Searching..." : lang[configLanguage]?.search}

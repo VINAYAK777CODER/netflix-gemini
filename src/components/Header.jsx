@@ -11,13 +11,13 @@ import { changeLanguage } from "../utils/configSlice";
 const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
-  const navigate = useNavigate();
   const showGptsearch = useSelector((store) => store.gpt.showGptSearch);
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
-        dispatch(addUser(null)); // CLEAR THE USER FROM REDUX
+        dispatch(addUser(null)); // Clear the user from Redux
       })
       .catch((error) => {
         console.log(error);
@@ -40,7 +40,7 @@ const Header = () => {
         dispatch(addUser({ uid, email, displayName, photoURL }));
         navigate("/browse");
       } else {
-        dispatch(addUser(null)); // CLEAR USER ON SIGN OUT
+        dispatch(addUser(null)); // Clear user on sign out
         navigate("/");
       }
     });
@@ -48,21 +48,23 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
-  return (
-    <div className="z-40 w-full px-4 sm:px-8 py-3 absolute bg-gradient-to-b from-black flex items-center justify-between flex-wrap">
-      {/* Netflix Logo */}
-      <img
-        className="w-24 sm:w-36 md:w-44 lg:w-52"
-        src={LOGO_NETFLIX}
-        alt="Netflix Logo"
-      />
+  // 🔥 If not logged in, don’t show header
+  if (!user || !user.photoURL) return null;
 
-      {/* User Icon & Sign Out Button */}
-      {user && user.photoURL && (
-        <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-8">
-          {showGptsearch && (
+  return (
+    <div className="z-40 w-full px-4 sm:px-8 py-3 absolute bg-gradient-to-b from-black">
+      {/* ✅ GPT Search Mode - Centered layout */}
+      {showGptsearch ? (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <img
+            className="w-24 sm:w-36 md:w-44 lg:w-52"
+            src={LOGO_NETFLIX}
+            alt="Netflix Logo"
+          />
+
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             <select
-              className="p-2 m-2 bg-gray-900 text-white rounded-md"
+              className="p-1 sm:p-2 bg-gray-900 text-white text-sm sm:text-base rounded-md"
               onChange={handleLanguageChange}
             >
               {SUPPORTED_LANGUAGES.map((lang) => (
@@ -71,30 +73,60 @@ const Header = () => {
                 </option>
               ))}
             </select>
-          )}
 
-          {/* GPT Search Button */}
-          <button
-            onClick={handleGptSearchClick}
-            className="text-emerald-500 border border-emerald-500 hover:bg-emerald-600 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 rounded-md font-semibold hover:scale-110 transition duration-300 sm:px-2 sm:py-1"
-          >
-            {!showGptsearch ? "GPTsearch" : "HomePage"}
-          </button>
+            <button
+              onClick={handleGptSearchClick}
+              className="text-emerald-500 border-2 border-transparent hover:border-emerald-500 hover:ring-2 hover:ring-emerald-500 hover:ring-opacity-50 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 text-sm rounded-md font-medium hover:scale-105 transition duration-300 sm:text-base sm:font-semibold"
+            >
+              HomePage
+            </button>
 
-          {/* User Icon */}
+            <img
+              src={user.photoURL}
+              alt="User Icon"
+              className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover"
+            />
+
+            <button
+              onClick={handleSignOut}
+              className="text-red-600 border-2 border-transparent hover:border-red-600 hover:ring-2 hover:ring-red-600 hover:ring-opacity-50 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 text-sm rounded-md font-medium hover:scale-105 transition duration-300 sm:text-base sm:font-semibold"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      ) : (
+        // ✅ Home Page Mode - Logo on left, buttons on right
+        <div className="flex items-center justify-between flex-wrap">
+          {/* Left: Logo */}
           <img
-            src={user.photoURL}
-            alt="User Icon"
-            className="h-10 w-10 rounded-full object-cover"
+            className="w-24 sm:w-36 md:w-44 lg:w-52"
+            src={LOGO_NETFLIX}
+            alt="Netflix Logo"
           />
 
-          {/* Sign Out Button */}
-          <button
-            onClick={handleSignOut}
-            className="text-red-600 border border-red-600 hover:bg-red-700 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 rounded-md font-semibold hover:scale-110 transition duration-300 sm:px-2 sm:py-1"
-          >
-            Sign Out
-          </button>
+          {/* Right: Buttons */}
+          <div className="flex items-center gap-2 sm:gap-4 mt-3 sm:mt-0">
+            <button
+              onClick={handleGptSearchClick}
+              className="text-emerald-500 border-2 border-transparent hover:border-emerald-500 hover:ring-2 hover:ring-emerald-500 hover:ring-opacity-50 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 text-sm rounded-md font-medium hover:scale-105 transition duration-300 sm:text-base sm:font-semibold"
+            >
+               AI-Search
+            </button>
+
+            <img
+              src={user.photoURL}
+              alt="User Icon"
+              className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover"
+            />
+
+            <button
+              onClick={handleSignOut}
+              className="text-red-600 border-2 border-transparent hover:border-red-600 hover:ring-2 hover:ring-red-600 hover:ring-opacity-50 text-white text-opacity-70 bg-clip-text backdrop-blur-sm px-3 py-1 text-sm rounded-md font-medium hover:scale-105 transition duration-300 sm:text-base sm:font-semibold"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       )}
     </div>
