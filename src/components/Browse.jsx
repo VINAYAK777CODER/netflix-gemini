@@ -6,8 +6,8 @@ import useNowPlayingMovies from "../hooks/useNowPlayingMovies";
 import MainContainer from "./MainContainer";
 import SecondryContainer from "./SecondryContainer";
 import usePopularMovies from "../hooks/usePopularMovies";
-import useTopRatedMovies from "../hooks/usetopRatedMovies";
-import useUpcomingMovies from "../hooks/useUpcomingMovies.jsx";
+import useUpcomingMovies from "../hooks/useUpcomingMovies";
+import useTopRatedMovies from "../hooks/useTopRatedMovies"
 import GptSearch from "./GptSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGptResults } from "../utils/gptSlice";
