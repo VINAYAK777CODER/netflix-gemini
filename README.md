@@ -1,5 +1,10 @@
+
+🌐 Live Demo: netflix-gemini-theta.vercel.app
+
 # 🎬 Netflix-Gemini  
+
 > A Next-Gen Netflix Clone Powered by Gemini AI  
+
 > Built by [VINAYAK777CODER](https://github.com/VINAYAK777CODER)
 
 ---
