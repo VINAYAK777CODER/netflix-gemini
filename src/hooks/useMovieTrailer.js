@@ -9,44 +9,58 @@ const useMovieTrailer = (movieId) => {
   const dispatch = useDispatch();
 
   const getMovieTrailer = async () => {
+    // console.log("🔥 movieId:", movieId);
+
     try {
       const response = await axios.get(
         `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`,
         API_OPTIONS
       );
 
-      const data = response.data;
+      // console.log("API RESPONSE:", response.data);
 
-      const filteredVideos = data?.results?.filter(
+      const data = response?.data;
+
+      // ✅ SAFETY CHECK
+      if (!data || !data.results) {
+        console.error("❌ No results from API");
+        dispatch(addTrailerVideo(null)); // IMPORTANT
+        return;
+      }
+
+      const filteredVideos = data.results.filter(
         (video) => video.type === "Trailer" && video.site === "YouTube"
       );
 
-      const trailer = filteredVideos?.length
+      const trailer = filteredVideos.length
         ? filteredVideos[0]
-        : data.results[0];
+        : data.results.length > 0
+        ? data.results[0]
+        : null;
 
-      if (trailer) {
-        dispatch(addTrailerVideo(trailer));
-      } else {
-        console.warn("No trailer found for this movie.");
+      // ✅ HANDLE NO TRAILER CASE (THIS WAS MISSING)
+      if (!trailer) {
+        console.warn("❌ No trailer available for this movie");
+        dispatch(addTrailerVideo(null)); // VERY IMPORTANT
+        return;
       }
+
+      // ✅ SUCCESS CASE
+      dispatch(addTrailerVideo(trailer));
+
     } catch (error) {
-      console.error("Problem in fetching the movie trailer");
-
-      if (error.response) {
-        console.error("Error status:", error.response.status);
-        console.error("Error message:", error.response.data.status_message);
-      } else {
-        console.error("Error:", error.message);
-      }
+      console.error("❌ Trailer fetch failed:", error);
+      dispatch(addTrailerVideo(null)); // fallback
     }
   };
 
   useEffect(() => {
-    if (movieId && !trailervideo) {
+    if (movieId) {
       getMovieTrailer();
     }
   }, [movieId]);
+
+  console.log("🎬 trailer from store:", trailervideo);
 
   return trailervideo;
 };
