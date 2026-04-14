@@ -71,14 +71,16 @@ Example: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya
         })
       );
     } catch (error) {
-      console.error("GPT search failed:", error);
+  console.error("GPT search failed:", error?.message, error);
 
-      if (error?.message?.includes("quota")) {
-        setErrorMsg("AI quota exceeded. Please try again later.");
-      } else {
-        setErrorMsg("AI service is temporarily unavailable.");
-      }
-    } finally {
+  if (error?.message?.includes("quota") || error?.message?.includes("429")) {
+    setErrorMsg("AI quota exceeded. Please try again later.");
+  } else if (error?.message?.includes("API_KEY") || error?.message?.includes("API key")) {
+    setErrorMsg("Invalid or missing API key.");
+  } else {
+    setErrorMsg(`AI error: ${error?.message || "Unknown error"}`);  // show actual error
+  }
+} finally {
       setLoading(false);
     }
   };
